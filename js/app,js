@@ -7,10 +7,12 @@ document.querySelectorAll('article.item').forEach( (item, i) => {
 
 	if(document.querySelectorAll('article.item')[i].querySelector('select') !== null){
 
-		document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = document.querySelectorAll('article.item')[i].querySelector('select').value;
+		document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = 
+			document.querySelectorAll('article.item')[i].querySelector('select').value;
 
 		document.querySelectorAll('article.item')[i].querySelector('select').onchange = () => {
-			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = document.querySelectorAll('article.item')[i].querySelector('select').value;
+			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = 
+				document.querySelectorAll('article.item')[i].querySelector('select').value;
 		}
 
 	} else {
