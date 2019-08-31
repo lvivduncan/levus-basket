@@ -1,155 +1,113 @@
 
-// натискання кнопки "в кошик" створює/перезаписує об’єкт у локалСторедж і виводе з ЛС дані в кошик
-// видалення позиції з кошику має перезаписувати об’єкт у ЛС і виводити у кошику
-const items = document.querySelectorAll('article.item'); // отримуємо усі карточки товарів
+// написав те саме, але лише з 1 перемінною =)
 
-// опрацьовуємо нодЛіст
-items.forEach((item, i) => {
+let goods = [];
 
-	// отримуємо кнопку замовлення товару
-	let button = items[i].querySelector('.button');
+document.querySelectorAll('article.item').forEach( (item, i) => {
 
-	// отримуємо додаткові опції товару
-	let select = items[i].querySelector('select');
+	if(document.querySelectorAll('article.item')[i].querySelector('select') !== null){
 
-	// якщо опції є
-	if(select != null){
-		button.dataset.option = select.value;
+		document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = document.querySelectorAll('article.item')[i].querySelector('select').value;
 
-		// отримуємо вибрану опцію і записуємо в data-option="" 
-		select.onchange = () => {
-			button.dataset.option = select.value;
+		document.querySelectorAll('article.item')[i].querySelector('select').onchange = () => {
+			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = document.querySelectorAll('article.item')[i].querySelector('select').value;
 		}
+
 	} else {
-		button.dataset.option = 0;
+
+		document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = 0;
+
 	}
 
-	// клікання на кнопці замовлення товару
-	button.onclick = () => {
-		
-		// якщо у локалСтореджі уже є дані
-		if(localStorage.getItem('basket') != null){
-			let localContent = localStorage.getItem('basket');
+	document.querySelectorAll('article.item')[i].querySelector('.button').onclick = () => {
 
-			localStorage.setItem('basket', localContent + '|' + JSON.stringify({
-				name: button.dataset.name, 
-				price: button.dataset.price, 
-				option: button.dataset.option,
-				img: button.dataset.img
-			}));
+		goods.push(
+			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.name, 
+			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.price, 
+			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option, 
+			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.img
+		);
+
+		if(localStorage.getItem('basket') !== null){
+
+			localStorage.setItem('basket', localStorage.getItem('basket') + '; ' + goods.join('; '));
+
+			document.querySelector('.quantity').innerText = 
+				localStorage.getItem('basket')
+					.split('; ').length/4;
+
+			document.querySelectorAll('.amount')[0].innerText = 
+			document.querySelectorAll('.amount')[1].innerText = 
+				localStorage.getItem('basket')
+					.split('; ')
+					.filter((item, i) => item = i%4 === 1)
+					.reduce((total, item) => total + +item, 0);
+
+			document.querySelector('.goods').innerHTML = 
+			'<ul>' +
+				localStorage.getItem('basket')
+ 					.split('; ')
+ 					.filter((item, i) => item = i%4 === 0)
+ 					.reduce((total, item) => total + '<li>' + item + '</li>','') 
+			+ '</ul>';
+
 		} else {
-			localStorage.setItem('basket', JSON.stringify({
-				name: button.dataset.name, 
-				price: button.dataset.price, 
-				option: button.dataset.option,
-				img: button.dataset.img
-			}));
+
+			localStorage.setItem('basket', goods.join('; '));
+
+			document.querySelector('.quantity').innerText = 1;
+
+			// document.querySelectorAll('.amount')[0].innerText = 
+			// document.querySelectorAll('.amount')[1].innerText = 
+			// 	localStorage.getItem('basket')
+			// 		.split('; ')[1];
+
+			document.querySelectorAll('.amount')[0].innerText = 
+			document.querySelectorAll('.amount')[1].innerText = 
+				document.querySelectorAll('article.item')[i].querySelector('.button').dataset.price;
+
+			document.querySelector('.goods').innerHTML = 
+			`<ul><li>${document.querySelectorAll('article.item')[i].querySelector('.button').dataset.name}</li></ul>`;
 		}
 
-		// оновлюємо кошик
-		getBasket();
+		goods = []; 
 
 	}
+	
 });
 
-// працюємо з кошиком, виводимо в ньому дані про замовлені товари 
-const goods = document.querySelector('.goods'), // сюди виводимо товари з локалСтореджа
-	  amount = document.querySelectorAll('.amount'), // загальна вартість товарів у локалСтореджі
-	  quantity = document.querySelector('.quantity'); // кількість товарів у локалСтореджі
+if(localStorage.getItem('basket') !== null){
 
-const getBasket = () => {
+	document.querySelector('.quantity').innerText = localStorage.getItem('basket')
+		.split('; ').length/4;
 
-	let basket, // опрацьовуємо локалСторедж	
-		price = 0, // тимчасова змінна, в яку кладемо загальну вартість товарів
-		txt = '',
-		img = '<img src="images/trash.gif" alt=""> ';
+	document.querySelectorAll('.amount')[0].innerText = 
+	document.querySelectorAll('.amount')[1].innerText = 
+		localStorage.getItem('basket')
+			.split('; ')
+			.filter((item, i) => item = i%4 === 1)
+			.reduce((total, item) => total + +item, 0);
 
-	// якщо замовлення є
-	if(localStorage.getItem('basket') != null){
-
-		// отримуємо стрінг, розбираємо на частини
-		basket = localStorage.getItem('basket').split('|');
-
-		// опрацьовуємо стрінг
-		basket.forEach((item, i) => basket[i] = JSON.parse(basket[i]));	
-
-		// загальна сума замовлених товарів
-		price = basket.reduce((total, el) => total + +el.price, 0);
-		
-		// товари стовпчиком
-		basket.forEach((item) => txt += '<li>' + img + item.name + '</li>');	
-
-		// записуємо кількість товарів
-		quantity.textContent = basket.length;
-
-		// щоб не юзати зайвий раз цикл або метод форІч, вказую 2 класи явно:
-		amount[0].textContent = price;
-		amount[1].textContent = price;
-
-		// незадокументована властивість але прекрасно працює
-		goods.innerHTML = '<ul class="goods-list">' + txt + '</ul><hr />';
-	}
+	document.querySelector('.goods').innerHTML = 
+	'<ul>' +
+		localStorage.getItem('basket')
+			.split('; ')
+			.filter((item, i) => item = i%4 === 0)
+			.reduce((total, item) => total + '<li>' + item + '</li>','') 
+	+ '</ul>';
 
 }
 
-getBasket();
-	
-const goodsList = document.querySelectorAll('.goods-list > li'); // отримуємо товари з кошика
+document.querySelector('#del-goods').onclick = (event) => {
 
-if(goodsList != null){
-
-	if(localStorage.getItem('basket') != null){
-
-		// отримуємо стрінг, розбираємо на частини
-		let basket = localStorage.getItem('basket').split('|');	
-
-		// опрацьовуємо стрінг
-		basket.forEach((item, i) => basket[i] = JSON.parse(basket[i]));	
-
-		goodsList.forEach((item, i) => {
-			item.childNodes[0].onclick = () => {
-
-				let txt = '';
-
-				basket.splice(item.childNodes[i], 1); // видаляємо елемент
-
-				if(basket.length > 1){
-
-					for(let i in basket){
-						basket[i] = JSON.stringify(basket[i]);
-					}
-
-					txt = basket.join('|');
-
-					localStorage.setItem('basket', txt);
-
-				} else if(basket.length == 1) {
-
-					txt = basket[0];
-
-					localStorage.setItem('basket', JSON.stringify(txt));
-					
-				} else {
-
-					localStorage.clear();
-
-				}
-
-				getBasket();
-
-			}
-
-		});			
-
-	}
-
-}
-
-const delGoods = document.querySelector('#del-goods');
-
-delGoods.onclick = (event) => {
 	event.preventDefault();
-	localStorage.clear();
-	// return false;
-}
 
+	localStorage.clear();
+
+	document.querySelector('.quantity').innerText =
+	document.querySelectorAll('.amount')[0].innerText =
+	document.querySelectorAll('.amount')[1].innerText = 0;
+
+	document.querySelector('.goods').innerText = '';
+
+}
