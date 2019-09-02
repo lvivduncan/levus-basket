@@ -1,82 +1,101 @@
 
-// написав те саме, але лише з 1 перемінною =)
+// а тепер ООП =^.^=
 
-let goods = [];
+'use strict';
 
-document.querySelectorAll('article.item').forEach( (item, i) => {
+class Basket {
 
-	if(document.querySelectorAll('article.item')[i].querySelector('select') !== null){
-
-		document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = 
-			document.querySelectorAll('article.item')[i].querySelector('select').value;
-
-		document.querySelectorAll('article.item')[i].querySelector('select').onchange = () => {
-			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = 
-				document.querySelectorAll('article.item')[i].querySelector('select').value;
-		}
-
-	} else {
-
-		document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option = 0;
-
+	constructor(items, goods){
+		this.items = document.querySelectorAll(items);
+		this.goods = document.querySelector(goods);
 	}
 
-	document.querySelectorAll('article.item')[i].querySelector('.button').onclick = () => {
-
-		goods.push(
-			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.name, 
-			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.price, 
-			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.option, 
-			document.querySelectorAll('article.item')[i].querySelector('.button').dataset.img
-		);
-
-		if(localStorage.getItem('basket') !== null){
-
-			localStorage.setItem('basket', localStorage.getItem('basket') + '; ' + goods.join('; '));
-
-			document.querySelector('.quantity').innerText = 
-				localStorage.getItem('basket')
-					.split('; ').length/4;
-
-			document.querySelectorAll('.amount')[0].innerText = 
-			document.querySelectorAll('.amount')[1].innerText = 
-				localStorage.getItem('basket')
-					.split('; ')
-					.filter((item, i) => item = i%4 === 1)
-					.reduce((total, item) => total + +item, 0);
-
-			document.querySelector('.goods').innerHTML = 
-			'<ul>' +
-				localStorage.getItem('basket')
- 					.split('; ')
- 					.filter((item, i) => item = i%4 === 0)
- 					.reduce((total, item) => total + '<li>' + item + '</li>','') 
-			+ '</ul>';
-
-		} else {
-
-			localStorage.setItem('basket', goods.join('; '));
-
-			document.querySelector('.quantity').innerText = 1;
-
-			// document.querySelectorAll('.amount')[0].innerText = 
-			// document.querySelectorAll('.amount')[1].innerText = 
-			// 	localStorage.getItem('basket')
-			// 		.split('; ')[1];
-
-			document.querySelectorAll('.amount')[0].innerText = 
-			document.querySelectorAll('.amount')[1].innerText = 
-				document.querySelectorAll('article.item')[i].querySelector('.button').dataset.price;
-
-			document.querySelector('.goods').innerHTML = 
-			`<ul><li>${document.querySelectorAll('article.item')[i].querySelector('.button').dataset.name}</li></ul>`;
-		}
-
-		goods = []; 
-
-	}
+	list = [];
 	
-});
+	getBasket(button, quantity, amount){
+
+		this.button = button;
+		this.quantity = quantity;
+		this.amount = amount;
+		
+		this.items.forEach( (item, i) => {
+
+			if(this.items[i].querySelector('select') !== null){
+
+				this.items[i].querySelector(this.button).dataset.option = this.items[i].querySelector('select').value;
+
+				this.items[i].querySelector('select').onchange = () => {
+					this.items[i].querySelector(this.button).dataset.option = this.items[i].querySelector('select').value;
+				}
+
+			} else {
+
+				this.items[i].querySelector(this.button).dataset.option = 0;
+
+			}
+
+			// по кліку на кнопку "баттон" кладемо по 4 елементи в масив
+			this.items[i].querySelector(this.button).onclick = () => {
+
+				this.list.push(
+					this.items[i].querySelector(this.button).dataset.name, 
+					this.items[i].querySelector(this.button).dataset.price, 
+					this.items[i].querySelector(this.button).dataset.option, 
+					this.items[i].querySelector(this.button).dataset.img
+				);
+
+				if(localStorage.getItem('basket') !== null){
+
+					localStorage.setItem('basket', localStorage.getItem('basket') + '; ' + this.list.join('; '));
+
+					document.querySelector(this.quantity).innerText = 
+						localStorage.getItem('basket')
+							.split('; ').length/4;
+
+					document.querySelectorAll(this.amount)[0].innerText = 
+					document.querySelectorAll(this.amount)[1].innerText = 
+						localStorage.getItem('basket')
+							.split('; ')
+							.filter((item, i) => item = i%4 === 1)
+							.reduce((total, item) => total + +item, 0);
+
+					this.goods.innerHTML = 
+						'<ul>' +
+							localStorage.getItem('basket')
+			 					.split('; ')
+			 					.filter((item, i) => item = i%4 === 0)
+			 					.reduce((total, item) => total + '<li>' + item + '</li>','') 
+						+ '</ul>';
+
+				} else {
+
+					localStorage.setItem('basket', this.list.join('; '));
+
+					document.querySelector(this.quantity).innerText = 1;
+
+					document.querySelectorAll(this.amount)[0].innerText = 
+					document.querySelectorAll(this.amount)[1].innerText = 
+						this.items[i].querySelector(this.button).dataset.price;
+
+					this.goods.innerHTML = 
+						`<ul>
+							<li>${this.items[i].querySelector(this.button).dataset.name}</li>
+						</ul>`;
+
+				}
+
+				this.list = []; 
+			}
+			
+		});
+
+	}
+
+}
+
+const basket = new Basket('article.item', '.goods');
+
+basket.getBasket('.button', '.quantity', '.amount');
 
 if(localStorage.getItem('basket') !== null){
 
