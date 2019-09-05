@@ -1,134 +1,192 @@
 
-// а тепер ООП =^.^=
+// усі товари
+const items = document.querySelectorAll('article.item')
 
-'use strict';
+// кошик
+const goods = document.querySelector('.goods')
 
-class Basket {
+// вивід кількості товарів у кошикові
+const quantity = document.querySelector('.quantity')
 
-	constructor(items, goods){
-		this.items = document.querySelectorAll(items);
-		this.goods = document.querySelector(goods);
+// сума у кошикові
+const amount = document.querySelectorAll('.amount')
+
+// сюди кладемо товари, які записуємо у локалСторедж
+let list = []
+
+// опрацьовуємо клікання на кнопці "замовити"
+items.forEach( (item, i) => {
+
+	// tmp
+	const dataset = items[i].querySelector('.button').dataset
+
+	// tmp
+	const select = items[i].querySelector('select')
+
+	if(select !== null){
+
+		dataset.option = select.value
+
+		select.onchange = () => {
+			dataset.option = select.value
+		}
+
+	} else {
+
+		dataset.option = 0
+
 	}
 
-	list = [];
+	items[i].querySelector('.button').onclick = () => {
+
+		// додаю 4 позиції в масив
+		list.push(
+			dataset.name, 
+			dataset.price, 
+			dataset.option, 
+			dataset.img
+		);
+
+		if(localStorage.getItem('basket') !== null){
+
+			// додаю у сторедж наступні товари
+			localStorage.setItem('basket', localStorage.getItem('basket') + '; ' + list.join('; '));
+
+			quantity.innerText = 
+				localStorage.getItem('basket')
+					.split('; ').length/4
+
+			amount[0].innerText = 
+			amount[1].innerText = 
+				localStorage.getItem('basket')
+					.split('; ')
+					.filter((item, i) => item = i%4 === 1)
+					.reduce((total, item) => total + +item, 0)
+
+			// виводимо у кошикові дані
+			goods.innerHTML = 
+			'<ul>' +
+				localStorage.getItem('basket')
+ 					.split('; ')
+ 					.filter((item, i) => item = i%4 === 0)
+ 					.reduce((total, item) => total + '<li>' + item + '</li>','') 
+			+ '</ul>'
+
+		} else {
+
+			// додаю у сторедж 1 товар
+			localStorage.setItem('basket', list.join('; '))
+
+			quantity.innerText = 1
+
+			amount[0].innerText = 
+			amount[1].innerText = 
+				dataset.price
+
+			// виводимо у кошикові дані
+			goods.innerHTML = `<ul><li>${dataset.name}</li></ul>`
+		}
+
+		list = []
+
+	}
 	
-	getBasket(button, quantity, amount){
+});
 
-		this.button = button;
-		this.quantity = quantity;
-		this.amount = amount;
-		
-		this.items.forEach( (item, i) => {
 
-			if(this.items[i].querySelector('select') !== null){
-
-				this.items[i].querySelector(this.button).dataset.option = this.items[i].querySelector('select').value;
-
-				this.items[i].querySelector('select').onchange = () => {
-					this.items[i].querySelector(this.button).dataset.option = this.items[i].querySelector('select').value;
-				}
-
-			} else {
-
-				this.items[i].querySelector(this.button).dataset.option = 0;
-
-			}
-
-			// по кліку на кнопку "баттон" кладемо по 4 елементи в масив
-			this.items[i].querySelector(this.button).onclick = () => {
-
-				this.list.push(
-					this.items[i].querySelector(this.button).dataset.name, 
-					this.items[i].querySelector(this.button).dataset.price, 
-					this.items[i].querySelector(this.button).dataset.option, 
-					this.items[i].querySelector(this.button).dataset.img
-				);
-
-				if(localStorage.getItem('basket') !== null){
-
-					localStorage.setItem('basket', localStorage.getItem('basket') + '; ' + this.list.join('; '));
-
-					document.querySelector(this.quantity).innerText = 
-						localStorage.getItem('basket')
-							.split('; ').length/4;
-
-					document.querySelectorAll(this.amount)[0].innerText = 
-					document.querySelectorAll(this.amount)[1].innerText = 
-						localStorage.getItem('basket')
-							.split('; ')
-							.filter((item, i) => item = i%4 === 1)
-							.reduce((total, item) => total + +item, 0);
-
-					this.goods.innerHTML = 
-						'<ul>' +
-							localStorage.getItem('basket')
-			 					.split('; ')
-			 					.filter((item, i) => item = i%4 === 0)
-			 					.reduce((total, item) => total + '<li>' + item + '</li>','') 
-						+ '</ul>';
-
-				} else {
-
-					localStorage.setItem('basket', this.list.join('; '));
-
-					document.querySelector(this.quantity).innerText = 1;
-
-					document.querySelectorAll(this.amount)[0].innerText = 
-					document.querySelectorAll(this.amount)[1].innerText = 
-						this.items[i].querySelector(this.button).dataset.price;
-
-					this.goods.innerHTML = 
-						`<ul>
-							<li>${this.items[i].querySelector(this.button).dataset.name}</li>
-						</ul>`;
-
-				}
-
-				this.list = []; 
-			}
-			
-		});
-
-	}
-
-}
-
-const basket = new Basket('article.item', '.goods');
-
-basket.getBasket('.button', '.quantity', '.amount');
-
+// виводимо в кошикові дані про замовлені товари
 if(localStorage.getItem('basket') !== null){
 
-	document.querySelector('.quantity').innerText = localStorage.getItem('basket')
-		.split('; ').length/4;
+	quantity.innerText = 
+		localStorage.getItem('basket')
+			.split('; ').length/4
 
-	document.querySelectorAll('.amount')[0].innerText = 
-	document.querySelectorAll('.amount')[1].innerText = 
+	amount[0].innerText = 
+	amount[1].innerText = 
 		localStorage.getItem('basket')
 			.split('; ')
 			.filter((item, i) => item = i%4 === 1)
-			.reduce((total, item) => total + +item, 0);
+			.reduce((total, item) => total + +item, 0)
 
-	document.querySelector('.goods').innerHTML = 
+	goods.innerHTML = 
 	'<ul>' +
 		localStorage.getItem('basket')
 			.split('; ')
 			.filter((item, i) => item = i%4 === 0)
 			.reduce((total, item) => total + '<li>' + item + '</li>','') 
-	+ '</ul>';
+	+ '</ul>'
 
 }
 
+
+// очищаємо кошик
 document.querySelector('#del-goods').onclick = (event) => {
 
-	event.preventDefault();
+	event.preventDefault()
 
-	localStorage.clear();
+	localStorage.clear()
 
-	document.querySelector('.quantity').innerText =
-	document.querySelectorAll('.amount')[0].innerText =
-	document.querySelectorAll('.amount')[1].innerText = 0;
+	quantity.innerText =
+	amount[0].innerText =
+	amount[1].innerText = 0
 
-	document.querySelector('.goods').innerText = '';
+	goods.innerText = ''
 
+}
+
+
+// видаляємо з кошика по 1 товару
+document.onmouseover = (event) => {
+	if (event.path[2].classList == 'goods') {
+
+		const list = Array.from(event.path[1].children) // li's
+
+		// масив з локалСтореджа
+		const local = localStorage.getItem('basket').split('; ')
+
+		list.forEach( (item, i) => {
+			item.onclick = () => {
+
+				if(local.length === 4){
+
+					localStorage.clear()
+
+					quantity.innerText =
+					amount[0].innerText =
+					amount[1].innerText = 0
+
+					goods.innerText = ''
+
+				} else {
+
+					local.splice(i*4, 4)
+
+					// пишемо в локалСторедж
+					localStorage.setItem('basket', local.join('; '))
+
+					// перезаписуємо дані в кошикові
+					quantity.innerText = 
+						localStorage.getItem('basket')
+							.split('; ').length/4
+
+					amount[0].innerText = 
+					amount[1].innerText = 
+						localStorage.getItem('basket')
+							.split('; ')
+							.filter((item, i) => item = i%4 === 1)
+							.reduce((total, item) => total + +item, 0)
+
+					goods.innerHTML = 
+					'<ul>' +
+						localStorage.getItem('basket')
+							.split('; ')
+							.filter((item, i) => item = i%4 === 0)
+							.reduce((total, item) => total + '<li>' + item + '</li>','') 
+					+ '</ul>'
+					// перезаписуємо дані в кошикові
+
+				}
+			}
+		});
+	}
 }
