@@ -1,192 +1,47 @@
+// basket.js 15-12-19
+(() => {
 
-// усі товари
-const items = document.querySelectorAll('article.item')
-
-// кошик
-const goods = document.querySelector('.goods')
-
-// вивід кількості товарів у кошикові
-const quantity = document.querySelector('.quantity')
-
-// сума у кошикові
-const amount = document.querySelectorAll('.amount')
-
-// сюди кладемо товари, які записуємо у локалСторедж
-let list = []
-
-// опрацьовуємо клікання на кнопці "замовити"
-items.forEach( (item, i) => {
-
-	// tmp
-	const dataset = items[i].querySelector('.button').dataset
-
-	// tmp
-	const select = items[i].querySelector('select')
-
-	if(select !== null){
-
-		dataset.option = select.value
-
-		select.onchange = () => {
-			dataset.option = select.value
+//  перебираємо усі товари зі сторінки
+document.querySelectorAll('.item').forEach(item => {
+	item.addEventListener('click', e => {
+		// батон
+		const btn = item.querySelector('.button');
+		// розмір
+		const size = item.querySelector('.sizes select').value;
+		// клік на кнопці батона
+		if (e.target === btn) {
+			add(btn.dataset.name, btn.dataset.price, btn.dataset.img, size);
 		}
-
-	} else {
-
-		dataset.option = 0
-
-	}
-
-	items[i].querySelector('.button').onclick = () => {
-
-		// додаю 4 позиції в масив
-		list.push(
-			dataset.name, 
-			dataset.price, 
-			dataset.option, 
-			dataset.img
-		);
-
-		if(localStorage.getItem('basket') !== null){
-
-			// додаю у сторедж наступні товари
-			localStorage.setItem('basket', localStorage.getItem('basket') + '; ' + list.join('; '));
-
-			quantity.innerText = 
-				localStorage.getItem('basket')
-					.split('; ').length/4
-
-			amount[0].innerText = 
-			amount[1].innerText = 
-				localStorage.getItem('basket')
-					.split('; ')
-					.filter((item, i) => item = i%4 === 1)
-					.reduce((total, item) => total + +item, 0)
-
-			// виводимо у кошикові дані
-			goods.innerHTML = 
-			'<ul>' +
-				localStorage.getItem('basket')
- 					.split('; ')
- 					.filter((item, i) => item = i%4 === 0)
- 					.reduce((total, item) => total + '<li>' + item + '</li>','') 
-			+ '</ul>'
-
-		} else {
-
-			// додаю у сторедж 1 товар
-			localStorage.setItem('basket', list.join('; '))
-
-			quantity.innerText = 1
-
-			amount[0].innerText = 
-			amount[1].innerText = 
-				dataset.price
-
-			// виводимо у кошикові дані
-			goods.innerHTML = `<ul><li>${dataset.name}</li></ul>`
-		}
-
-		list = []
-
-	}
-	
+	});
 });
 
+// кнопка очистки локалСтореджа
+document.querySelector('#del-goods').addEventListener('click', clear);
 
-// виводимо в кошикові дані про замовлені товари
-if(localStorage.getItem('basket') !== null){
-
-	quantity.innerText = 
-		localStorage.getItem('basket')
-			.split('; ').length/4
-
-	amount[0].innerText = 
-	amount[1].innerText = 
-		localStorage.getItem('basket')
-			.split('; ')
-			.filter((item, i) => item = i%4 === 1)
-			.reduce((total, item) => total + +item, 0)
-
-	goods.innerHTML = 
-	'<ul>' +
-		localStorage.getItem('basket')
-			.split('; ')
-			.filter((item, i) => item = i%4 === 0)
-			.reduce((total, item) => total + '<li>' + item + '</li>','') 
-	+ '</ul>'
-
-}
-
-
-// очищаємо кошик
-document.querySelector('#del-goods').onclick = (event) => {
-
-	event.preventDefault()
-
-	localStorage.clear()
-
-	quantity.innerText =
-	amount[0].innerText =
-	amount[1].innerText = 0
-
-	goods.innerText = ''
-
-}
-
-
-// видаляємо з кошика по 1 товару
-document.onmouseover = (event) => {
-	if (event.path[2].classList == 'goods') {
-
-		const list = Array.from(event.path[1].children) // li's
-
-		// масив з локалСтореджа
-		const local = localStorage.getItem('basket').split('; ')
-
-		list.forEach( (item, i) => {
-			item.onclick = () => {
-
-				if(local.length === 4){
-
-					localStorage.clear()
-
-					quantity.innerText =
-					amount[0].innerText =
-					amount[1].innerText = 0
-
-					goods.innerText = ''
-
-				} else {
-
-					local.splice(i*4, 4)
-
-					// пишемо в локалСторедж
-					localStorage.setItem('basket', local.join('; '))
-
-					// перезаписуємо дані в кошикові
-					quantity.innerText = 
-						localStorage.getItem('basket')
-							.split('; ').length/4
-
-					amount[0].innerText = 
-					amount[1].innerText = 
-						localStorage.getItem('basket')
-							.split('; ')
-							.filter((item, i) => item = i%4 === 1)
-							.reduce((total, item) => total + +item, 0)
-
-					goods.innerHTML = 
-					'<ul>' +
-						localStorage.getItem('basket')
-							.split('; ')
-							.filter((item, i) => item = i%4 === 0)
-							.reduce((total, item) => total + '<li>' + item + '</li>','') 
-					+ '</ul>'
-					// перезаписуємо дані в кошикові
-
-				}
-			}
-		});
+// функція, яка додає товар у кошик по кліку на кнопці "баттон"
+function add(name = '', price = '', img = '', size = ''){
+	if (localStorage.getItem('basket') !== null) {
+		localStorage.basket += `|${name}|${price}|${img}|${size}`; // якщо якісь дані у кошику вже є
+	} else {
+		localStorage.basket = `${name}|${price}|${img}|${size}`; // якщо нема ніц
 	}
 }
+
+// функція виводу даних у кошик з локалСторедж
+function wiev(){
+
+}
+
+// видаляємо по 1 товару з кошика
+function remove(){
+
+}
+
+// очищаємо локалСторедж
+function clear(e){
+	e.preventDefault();
+	localStorage.clear();
+}
+
+})();
+// end
