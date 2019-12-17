@@ -8,12 +8,12 @@
     <div class="dropdown">
         <div class="goods"></div>
         <ul>
-            <li>Итого: <span class="sum">0</span> грн.</li>
+            <li>Всього: <span class="sum">0</span> грн.</li>
             <!-- <li><a href="">Оформити</a></li> -->
         </ul>
         <hr>
         <ul>
-            <li><a href="" id="del-goods">Видалити усі товари з кошика</a></li>
+            <li><span id="del-goods">Видалити усі товари з кошика</span></li>
         </ul>
 
     </div>
