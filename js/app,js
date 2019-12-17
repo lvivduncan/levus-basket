@@ -6,11 +6,12 @@ document.querySelectorAll('.item').forEach(item => {
 	item.addEventListener('click', e => {
 		// батон
 		const btn = item.querySelector('.button');
-		// розмір
-		const size = item.querySelector('.sizes select').value;
 		// клік на кнопці батона
 		if (e.target === btn) {
-			add(btn.dataset.name, btn.dataset.price, btn.dataset.img, size);
+			// надсилаємо дані
+			add(btn.dataset.name, btn.dataset.price, btn.dataset.img, item.querySelector('.sizes select').value);
+			// оновлюємо кошик
+			view();
 		}
 	});
 });
@@ -18,30 +19,92 @@ document.querySelectorAll('.item').forEach(item => {
 // кнопка очистки локалСтореджа
 document.querySelector('#del-goods').addEventListener('click', clear);
 
+// видаляємо товари з кошика
+document.querySelector('.goods').addEventListener('click', remove);
+
 // функція, яка додає товар у кошик по кліку на кнопці "баттон"
 function add(name = '', price = '', img = '', size = ''){
 	if (localStorage.getItem('basket') !== null) {
-		localStorage.basket += `|${name}|${price}|${img}|${size}`; // якщо якісь дані у кошику вже є
+		localStorage.basket += `|${name}|${price}|${img}|${size}`; // якщо якісь дані у локалСторедж вже є
 	} else {
 		localStorage.basket = `${name}|${price}|${img}|${size}`; // якщо нема ніц
 	}
 }
 
 // функція виводу даних у кошик з локалСторедж
-function wiev(){
+function view(){
+	// кількість
+	const quantity = document.querySelector('.quantity');
+	// сума (у 2 місцях)
+	const sum = document.querySelectorAll('.sum');
 
+	if (localStorage.getItem('basket') !== null) {
+		const array = localStorage.getItem('basket').split('|');
+		// виводимо кількість товарів
+		quantity.innerHTML = array.length/4;
+		// виводимо суму
+		sum[0].innerHTML = sum[1].innerHTML = array
+			.filter((item, i) => item = i%2 === 1) // відсортовую парні (ціна та розмір)
+			.filter((item, i) => item = i%2 === 0) // відсортовую тільки ціну
+			.reduce((total, item) => total + +item, 0); // загальна сума
+	} else {
+		quantity.innerHTML = sum[0].innerHTML = sum[1].innerHTML = 0;
+	}
+	document.querySelector('.goods').innerHTML = goods();
+}
+
+// список товарів у кошикові
+function goods(){
+	if (localStorage.getItem('basket') !== null) {
+		return localStorage.getItem('basket')
+			.split('|') // трансформую у масив
+			.filter((item,i) => item = i%4 !== 2) // відсортовую без зображення
+			.reduce((total, item, i) => {
+				if (i%3 === 0) {
+					return total + `<p><b>${item}</b> `; // назва товару
+				}
+				if(i%3 === 1) {
+					return total + `${item} грн`; // ціна
+				}
+				if(i%3 === 2) {
+					return total + ` (${item})</p>`; // розмір
+				}
+			}, '');
+	} else {
+		return '';
+	}
 }
 
 // видаляємо по 1 товару з кошика
-function remove(){
+function remove(e){
+	const basket = localStorage.getItem('basket').split('|');
+	const goods = [...document.querySelector('.goods').childNodes];
 
+	if (basket.length/4 == 1) {
+		clear();
+	} else {
+		if (e.target.nodeName === 'P') { // якщо клікнули на параграф
+			const index = goods.indexOf(e.target);
+			basket.splice(index*4, 4);
+			localStorage.setItem('basket', basket.join('|'));
+			view();
+		} else if(e.target.nodeName === 'B') { // якщо клікнули на вкладений тег "<b>"
+			const index = goods.indexOf(e.target.parentElement);
+			basket.splice(index*4, 4);
+			localStorage.setItem('basket', basket.join('|'));
+			view();
+		}		
+	}
 }
 
 // очищаємо локалСторедж
-function clear(e){
-	e.preventDefault();
+function clear(){
 	localStorage.clear();
+	document.querySelector('.goods').innerHTML = '';
+	view();
 }
+
+view();
 
 })();
 // end
