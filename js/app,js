@@ -1,4 +1,4 @@
-// basket.js 15-12-19
+// basket.js 15-17:12:19
 (() => {
 
 //  перебираємо усі товари зі сторінки
@@ -80,7 +80,7 @@ function remove(e){
 	const basket = localStorage.getItem('basket').split('|');
 	const goods = [...document.querySelector('.goods').childNodes];
 
-	if (basket.length/4 == 1) {
+	if (basket.length/4 === 1) {
 		clear();
 	} else {
 		if (e.target.nodeName === 'P') { // якщо клікнули на параграф
