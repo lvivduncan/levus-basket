@@ -1,21 +1,16 @@
 <div id="basket">
     <p>
         <span class="txt">Товарів: </span>
-        <span class="quantity">0</span> <br>
+        <span class="result">0</span> <br>
         <span class="txt">на <span class="sum">0</span> грн.</span>
     </p>
 
     <div class="dropdown">
-        <div class="goods"></div>
-        <ul>
-            <li>Всього: <span class="sum">0</span> грн.</li>
-            <!-- <li><a href="">Оформити</a></li> -->
-        </ul>
-        <hr>
-        <ul>
-            <li><span id="del-goods">Видалити усі товари з кошика</span></li>
-        </ul>
-
+        <div id="goods"></div>
+        <p>Всього: <span class="sum">0</span> грн.
+            <span data-fancybox data-src="#issue" id="get-issue">Оформити</span>
+        </p>
+        <p id="del-goods">Видалити усі товари з кошика</p>
     </div>
 </div>
 <!-- #basket -->
@@ -23,31 +18,27 @@
 <article class="item">
     <a href="">
         <figure>
-            <img src="temp/1.jpg" alt="">
+            <img src="temp/11.jpg" alt="">
         </figure>
         <figcaption>
-           Назва товару
+            Назва товару
         </figcaption>
     </a>
     <div class="caption">
-        <div class="price">14000</div>
+        <div class="price">1020</div>
         <button class="button"
             data-name="Назва товару"
-            data-price="14000"
-            data-brand="brand-1052"
-            data-color="color-1 color-2 color-3 color-4"
-            data-features="f1 f2 f3"
-            data-sizes="100x100 200x200 300x300 400x400"
-            data-img="temp/1.jpg">Купити</button>
+            data-price="1020">Купити
+        </button>
     </div>
     <div class="sizes">
-        <p>Размеры:</p>
+        <p>Розміри:</p>
         <select>
-            <option value="100 100x100">100x100</option>
-            <option value="200 200x200">200x200</option>
-            <option value="300 300x300">300x300</option>
-            <option value="400 400x400">400x400</option>
+            <option value="">-</option>
+            <option value="100">100x100</option>
+            <option value="200">200x200</option>
+            <option value="300">300x300</option>
+            <option value="400">400x400</option>
         </select>
     </div>
 </article>
-<!-- .item -->
