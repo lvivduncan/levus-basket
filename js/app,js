@@ -3,10 +3,6 @@
 // це дозволе нормально розширяти кошик, а не переписувати його постійно
 (() => {
 
-	// debug
-	const echo = console.log;
-
-
 	// перебираємо усі товари зі сторінки
 	if (document.querySelectorAll('.item') !== null) {
 		document.querySelectorAll('.item').forEach(item => {
@@ -397,8 +393,6 @@
 				`<br><b>${name[i]}</b> ${price[i]} грн. ${(sizeName[i]) ? `розмір: ${sizeName[i]}` : ``} ${optionName[i]} ${colorName[i]}`
 			);
 		});
-
-		echo(goods)
 
 		$.fancybox.open(`
 			<form>
