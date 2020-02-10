@@ -25,6 +25,7 @@
 					// оновлюємо кошик
 					view();
 					issue();
+					msg(btn);
 				}
 			});
 		});		
@@ -44,6 +45,7 @@
 				button.dataset.colorname,   // колір
 				button.dataset.colorprice   // колір
 			);
+			msg(this);
 		});
 	}
 
@@ -59,7 +61,7 @@
 
 	// лінк "Оформить"
 	const getIssue = document.querySelector('#get-issue');
-	// getIssue.addEventListener('click', order);
+	getIssue.addEventListener('click', order);
 
 	/**
 	 * клік на кнопці "#button" додає в кошик дані:
@@ -101,8 +103,8 @@
 				: localStorage.name = `~${name}`.repeat(`${result}`);
 
 			// ціна (true)
-			localStorage.getItem('price') !== null ? localStorage.price += `~${price}`.repeat(`${result}`) 
-				: localStorage.price = `~${price}`.repeat(`${result}`);
+			localStorage.getItem('price') !== null ? localStorage.price += `~${price/result}`.repeat(`${result}`) 
+				: localStorage.price = `~${price/result}`.repeat(`${result}`);
 
 			// кількість
 			localStorage.getItem('result') !== null ? localStorage.result = `${result}`*1 + localStorage.result*1 : localStorage.result = `${result}`;
@@ -198,7 +200,7 @@
 				`<p>
 					<b>${name[i]}</b>
 					${price[i]} грн.
-					${(sizeName[i]) ? `размер: ${sizeName[i]}` : ``}
+					${(sizeName[i]) ? `розмір: ${sizeName[i]}` : ``}
 					${optionName[i]}
 					${colorName[i]}
 				</p>`
@@ -346,6 +348,81 @@
 			getIssue.style.display = 'none';
 			delGoods.style.display = 'none';
 		}    
+	}
+
+	/**
+	 * відкриває фенсібокс-вікно для оформлення замовлення
+	 */
+    function order(){
+
+		// дані зі сховища
+		let
+		name =           // назва
+		price =          // ціна
+		result =         // кількість
+		sizeName =       // розміри
+		sizePrice =      // розміри
+		optionName =     // опції
+		optionPrice =    // опції
+		colorName =      // колір
+		colorPrice = []; // колір
+
+		// назви товарів
+		localStorage.getItem('name') !== null ? name = localStorage.name.split('~') : name.length = 0;
+
+		// кількість грошей
+		localStorage.getItem('price') !== null ? price = localStorage.price.split('~') : price.length = 0;
+
+		// кількість товарів
+		localStorage.getItem('result') !== null ? result = localStorage.result : result = 0;
+
+		// кількість розмірів
+		localStorage.getItem('sizeName') !== null ? sizeName = localStorage.sizeName.split('~') : sizeName.length = 0;
+		localStorage.getItem('sizePrice') !== null ? sizePrice = localStorage.sizePrice.split('~') : sizePrice.length = 0;
+
+		// кількість додаткових опцій
+		localStorage.getItem('optionName') !== null ? optionName = localStorage.optionName.split('~') : optionName.length = 0;
+		localStorage.getItem('optionPrice') !== null ? optionPrice = localStorage.optionPrice.split('~') : optionPrice.length = 0;
+
+		// кількість кольорів
+		localStorage.getItem('colorName') !== null ? colorName = localStorage.colorName.split('~') : colorName.length = 0;
+		localStorage.getItem('colorPrice') !== null ? colorPrice = localStorage.colorPrice.split('~') : colorPrice.length = 0;
+
+		// масив, в який складаємо всі товари
+		const goods = [];
+
+		// перебираємо циклом всі елементи
+		name.forEach((item, i) => {
+			goods.push(
+				`<br><b>${name[i]}</b> ${price[i]} грн. ${(sizeName[i]) ? `розмір: ${sizeName[i]}` : ``} ${optionName[i]} ${colorName[i]}`
+			);
+		});
+
+		echo(goods)
+
+		$.fancybox.open(`
+			<form>
+				<div id="issue-goods">
+					<h4>Оформить заказ?</h4>
+					${goods}
+				</div>
+				<div id="issue-form">
+					<p><input type="text" placeholder="ПІП" required><input type="text" placeholder="Телефон" required></p>
+					<p><input type="text" placeholder="Імейл" required><input type="text" placeholder="Адреса" required></p>
+					<p><textarea placeholder="Примітка"></textarea></p>
+					<p><input type="submit"></p>
+				</div>
+				<!-- #issue-form -->
+			</form>
+        `);
+	}
+	
+	/**
+	 * фенсібокс-алерт про додавання товару у кошик
+	 */
+	function msg(el){
+		$.fancybox.open(`<div id="issue"> Товар <b>${el.dataset.name}</b> додано у кошик </div>`);
+		setTimeout(() => $.fancybox.close(), 1000);
 	}
 
 	// опрацьовуємо кошик
