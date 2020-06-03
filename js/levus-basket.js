@@ -16,7 +16,7 @@
 	document.querySelector('#basket-order').addEventListener('click', getOrder);
 
 	// clear localStorage
-	document.querySelector('#basket-delete').addEventListener('click', clearStorage);
+	document.querySelector('#basket-clear').addEventListener('click', clearStorage);
 
 	// reload
 	viewSum();
