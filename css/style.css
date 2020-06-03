@@ -1,0 +1,39 @@
+*,
+::after,
+::before {
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+/* /////////////
+кошик з товарами
+///////////// */
+#basket{
+  width: 300px;
+  padding: 10px;
+  border: 1px solid lawngreen;
+  margin: 10px 10px 50px;
+}
+
+/* /////////////////
+обгортка для товарів 
+///////////////// */
+#items{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 20px;
+}
+
+/* //
+товар
+// */
+.item{
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid rosybrown;
+}
+
+.item img{
+  max-width: 100%!important;
+}
