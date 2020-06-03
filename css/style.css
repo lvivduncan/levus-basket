@@ -94,3 +94,39 @@
 #basket-delete{
   cursor: pointer;  
 }
+
+/* ////////////////////
+кнопка видалення товару
+//////////////////// */
+#basket i{
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+#basket i::after{
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: maroon;
+  -webkit-transform: rotate(60deg);
+  transform: rotate(60deg);
+}
+
+#basket i::before{
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: maroon;
+  -webkit-transform: rotate(-60deg);
+  transform: rotate(-60deg);
+}

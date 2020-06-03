@@ -1,28 +1,22 @@
 // basket.js 3-06-2020
-// новий проєкт -- новий кошик
 {
-	// all buttons
-	const buttons = document.querySelectorAll('button');
-
-	buttons.forEach(button => button.addEventListener('click', add));
-
 	// wiev quantity goods
-	const result = document.querySelector('#basket-result');
+	const quantity = document.querySelector('#basket-quantity');
 
 	// view sum
 	const sum = document.querySelector('#basket-sum');
 
-	// order
-	const order = document.querySelector('#basket-order');
+	// view selected goods
+	const selected = document.querySelector('#basket-goods');
+
+	// all buttons click
+	document.querySelectorAll('button').forEach(button => button.addEventListener('click', add));
 
 	// click by button #basket-order
-	order.addEventListener('click', getOrder);
-
-	// clear
-	const clear = document.querySelector('#basket-delete');
+	document.querySelector('#basket-order').addEventListener('click', getOrder);
 
 	// clear localStorage
-	clear.addEventListener('click', clearStorage);
+	document.querySelector('#basket-delete').addEventListener('click', clearStorage);
 
 	// reload
 	viewSum();
@@ -40,7 +34,6 @@
 			data.push({ name: this.dataset.name, size: this.dataset.size, price: this.dataset.price });
 			// add data to localStorage
 			localStorage.setItem('basket', JSON.stringify(data));
-
 			// reload 
 			viewQuantity();
 			viewSum();
@@ -51,7 +44,6 @@
 			data.push({ name: this.dataset.name, size: this.dataset.size, price: this.dataset.price })
 			// add data to localStorage
 			localStorage.setItem('basket', JSON.stringify(data));
-
 			// reload 
 			viewQuantity();
 			viewSum();
@@ -61,9 +53,9 @@
 	// return quantity goods
 	function viewQuantity() {
 		if (localStorage.getItem('basket') === null) {
-			result.innerHTML = 0;
+			quantity.innerHTML = 0;
 		} else {
-			result.innerHTML = JSON.parse(localStorage.getItem('basket')).length;
+			quantity.innerHTML = JSON.parse(localStorage.getItem('basket')).length;
 		}
 	}
 
@@ -84,7 +76,6 @@
 	// clear localStorage
 	function clearStorage() {
 		localStorage.clear('basket');
-
 		// reload
 		viewSum();
 		viewQuantity();
