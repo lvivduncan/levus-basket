@@ -1,15 +1,15 @@
 *,
 ::after,
 ::before {
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
 }
 
 /* /////////////
 кошик з товарами
 ///////////// */
-#basket{
+#basket {
   width: 300px;
   padding: 10px;
   border: 1px solid lawngreen;
@@ -19,39 +19,39 @@
 /* /////////////////
 обгортка для товарів 
 ///////////////// */
-#items{
+#items {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 10px;
   padding: 10px;
 }
 
-@media(max-width: 1200px){
-  #items{
+@media(max-width: 1200px) {
+  #items {
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
-@media(max-width: 991px){
-  #items{
+@media(max-width: 991px) {
+  #items {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@media(max-width: 776px){
-  #items{
+@media(max-width: 776px) {
+  #items {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media(max-width: 550px){
-  #items{
+@media(max-width: 550px) {
+  #items {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media(max-width: 450px){
-  #items{
+@media(max-width: 450px) {
+  #items {
     grid-template-columns: repeat(1, 1fr);
   }
 }
@@ -59,74 +59,83 @@
 /* //
 товар
 // */
-.item{
+.item {
   padding: 10px;
   border: 1px solid rosybrown;
 }
 
-.item img{
-  max-width: 100%!important;
+.item img {
+  max-width: 100% !important;
 }
 
 /* ціна */
-.price{
+.price {
   margin: 5px 0;
 }
 
-.price::before{
+.price::before {
   content: 'ціна: ';
 }
 
-.price::after{
+.price::after {
   content: ' грн';
 }
 
 /* ////////////////
 оформити замовлення
 //////////////// */
-#basket-order{
+#basket-order {
   cursor: pointer;
 }
 
 /* ///////////
 очистити кошик
 /////////// */
-#basket-delete{
-  cursor: pointer;  
+#basket-clear {
+  cursor: pointer;
+}
+
+/* ///////////////////////
+виводимо товари у кошикові
+/////////////////////// */
+#basket-goods p{
+  margin: 5px 0;
 }
 
 /* ////////////////////
 кнопка видалення товару
 //////////////////// */
-#basket i{
+#basket i {
   display: inline-block;
   position: relative;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
+  top: 6px;
+  cursor: pointer;
 }
 
-#basket i::after{
+#basket i::after {
   content: '';
   display: block;
   position: absolute;
   top: 0;
   left: 0;
-  height: 1px;
+  height: 3px;
   width: 100%;
   background: maroon;
-  -webkit-transform: rotate(60deg);
-  transform: rotate(60deg);
+  -webkit-transform: rotate(50deg);
+  transform: rotate(50deg);
 }
 
-#basket i::before{
+#basket i::before {
   content: '';
   display: block;
   position: absolute;
   top: 0;
   left: 0;
-  height: 1px;
+  height: 3px;
   width: 100%;
   background: maroon;
-  -webkit-transform: rotate(-60deg);
-  transform: rotate(-60deg);
+  -webkit-transform: rotate(-50deg);
+  transform: rotate(-50deg);
 }
