@@ -69,6 +69,28 @@
 }
 
 /* ціна */
+.price{
+  margin: 5px 0;
+}
+
 .price::before{
   content: 'ціна: ';
+}
+
+.price::after{
+  content: ' грн';
+}
+
+/* ////////////////
+оформити замовлення
+//////////////// */
+#basket-order{
+  cursor: pointer;
+}
+
+/* ///////////
+очистити кошик
+/////////// */
+#basket-delete{
+  cursor: pointer;  
 }
