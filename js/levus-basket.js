@@ -10,13 +10,16 @@
 	const selected = document.querySelector('#basket-goods');
 
 	// all buttons click
-	document.querySelectorAll('button').forEach(button => button.addEventListener('click', add));
+	document.querySelectorAll('button').forEach(button => button.addEventListener('click', addGoods));
 
 	// click by button #basket-order
 	document.querySelector('#basket-order').addEventListener('click', getOrder);
 
 	// clear localStorage
 	document.querySelector('#basket-clear').addEventListener('click', clearStorage);
+
+	// delete goods one by one
+	selected.addEventListener('click', e => removeGoods(e));
 
 	// view sum
 	viewSum();
@@ -28,26 +31,38 @@
 	viewSelected();
 
 	// add to localStorage
-	function add() {
-		// create array for data
-		const data = [];
-		// chech localStorage and add data to localStorage
+	function addGoods() {
+
+		// temporary array
+		const content = { name: this.dataset.name, size: this.dataset.size, price: this.dataset.price };
+
+		// check localStorage and add data to localStorage
 		if (localStorage.getItem('basket') === null) {
+
+			// create array for data
+			const data = [];
+
 			// push object with 3 items to array
-			data.push({ name: this.dataset.name, size: this.dataset.size, price: this.dataset.price });
+			data.push(content);
+
 			// add data to localStorage
 			localStorage.setItem('basket', JSON.stringify(data));
+
 			// reload 
 			viewQuantity();
 			viewSum();
 			viewSelected();
 		} else {
+
 			// load data from localStorage
 			const data = JSON.parse(localStorage.getItem('basket'));
+
 			// push object with 3 items to array
-			data.push({ name: this.dataset.name, size: this.dataset.size, price: this.dataset.price })
+			data.push(content);
+
 			// add data to localStorage
 			localStorage.setItem('basket', JSON.stringify(data));
+
 			// reload 
 			viewQuantity();
 			viewSum();
@@ -81,6 +96,7 @@
 	// clear localStorage
 	function clearStorage() {
 		localStorage.clear('basket');
+
 		// reload
 		viewSum();
 		viewQuantity();
@@ -93,12 +109,35 @@
 			selected.innerHTML = '';
 		} else {
 			const data = JSON.parse(localStorage.getItem('basket'));
-			// console.log(data)
+
 			if (JSON.parse(localStorage.getItem('basket')).length === 1) {
 				selected.innerHTML = `<p><i></i> ${data[0].name} - ${data[0].size} - ${data[0].price}</p>`;
 			} else {
-				selected.innerHTML = data.reduce((sum, item) => sum + `<p><i></i> ${item.name} - ${item.size} - ${item.price}</p>`, '');
+				selected.innerHTML = data.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}</p>`, '');
 			}
+		}
+	}
+
+	// delete goods from basket
+	function removeGoods(e) {
+		if (e.target.tagName === 'I') {
+
+			// id goods
+			const id = e.target.dataset.id;
+
+			// goods from storage
+			const data = JSON.parse(localStorage.getItem('basket'));
+
+			// remove item
+			data.splice(id, 1);
+
+			// return data to localStorage
+			localStorage.setItem('basket', JSON.stringify(data));
+
+			// reload
+			viewSum();
+			viewQuantity();
+			viewSelected();
 		}
 	}
 }
