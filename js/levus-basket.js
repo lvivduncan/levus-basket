@@ -113,7 +113,7 @@
 			if (JSON.parse(localStorage.getItem('basket')).length === 1) {
 				selected.innerHTML = `<p><i></i> ${data[0].name} - ${data[0].size} - ${data[0].price}</p>`;
 			} else {
-				selected.innerHTML = data.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}</p>`, '');
+				selected.innerHTML = data.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}грн</p>`, '');
 			}
 		}
 	}
@@ -141,6 +141,3 @@
 		}
 	}
 }
-// end
-
-// todo: в ідеалі має сумувати однакові товари, або ж ні =)
