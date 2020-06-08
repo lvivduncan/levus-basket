@@ -1,10 +1,10 @@
 // 8-06-2020
 $('.button').each(function () {
-  $(this).click(addToBusket);
+  $(this).click(addToBasket);
 });
 
 // додаємо у кошик
-function addToBusket() {
+function addToBasket() {
   // тимчасовий масив з об'єктами
   const content = {
     name: $(this).data('name'),
