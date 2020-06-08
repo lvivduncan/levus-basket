@@ -1,4 +1,6 @@
 // 8-06-2020
+
+// клікаємо на кнопку замовлення
 $('.button').each(function () {
   $(this).click(addToBasket);
 });
@@ -9,8 +11,15 @@ viewQuantity();
 // сума
 viewSum();
 
+// товари
+viewProducts();
+
 // очистка кошика
 $('#basket-clear').click(clearStorage);
+
+/* ///////////
+функції кошика
+/////////// */
 
 // додаємо у кошик
 function addToBasket() {
@@ -50,6 +59,23 @@ function addToBasket() {
 
   // оновлюємо суму
   viewSum();
+
+  // товари
+  viewProducts();
+}
+
+// очистка кошика
+function clearStorage() {
+  localStorage.removeItem('basket');
+
+  // оновлюємо кількість товарів у кошикові
+  viewQuantity();
+
+  // оновлюємо суму
+  viewSum();
+
+  // товари
+  viewProducts();
 }
 
 // кількість товарів 
@@ -79,13 +105,20 @@ function viewSum() {
   $('#basket-sum').text(total);
 }
 
-// очистка кошика
-function clearStorage(){
-  localStorage.removeItem('basket');
+// товари у кошикові
+function viewProducts() {
+  let goods = '';
 
-  // оновлюємо кількість товарів у кошикові
-  viewQuantity();
-  
-  // оновлюємо суму
-  viewSum();
+  if (localStorage.getItem('basket')) {
+    JSON.parse(localStorage.getItem('basket'))
+      .map(function (item) {
+        goods += `<p><i></i> ${item.name} - ${item.size} - ${item.price}грн</p>`;
+        return goods;
+      });
+
+    $('#basket-goods').html(goods);
+  } else {
+    $('#basket-goods').html('');
+  }
+
 }
