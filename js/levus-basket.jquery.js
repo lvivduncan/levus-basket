@@ -5,6 +5,14 @@ $('.button').each(function () {
   $(this).click(addToBasket);
 });
 
+// видаляємо по 1 товару
+$('#basket-goods').click(function(e){
+  deleteProduct(e);
+});
+
+// очистка кошика
+$('#basket-clear').click(clearStorage);
+
 // показуємо кількість товарів у кошикові
 viewQuantity();
 
@@ -13,9 +21,6 @@ viewSum();
 
 // товари
 viewProducts();
-
-// очистка кошика
-$('#basket-clear').click(clearStorage);
 
 /* ///////////
 функції кошика
@@ -62,6 +67,25 @@ function addToBasket() {
 
   // товари
   viewProducts();
+}
+
+// видаляємо товар
+function deleteProduct(e){
+  if(e.target.tagName === 'I'){
+    const data = JSON.parse(localStorage.getItem('basket'));
+    data.splice(e.target.dataset.id, 1);
+    
+    if (data.length === 0) {
+      localStorage.removeItem('basket');
+    } else {
+      localStorage.setItem('basket', JSON.stringify(data));
+    }
+  
+    // оновлюємо
+    viewSum();
+    viewQuantity();
+    viewProducts();
+  }
 }
 
 // очистка кошика
@@ -111,8 +135,8 @@ function viewProducts() {
 
   if (localStorage.getItem('basket')) {
     JSON.parse(localStorage.getItem('basket'))
-      .map(function (item) {
-        goods += `<p><i></i> ${item.name} - ${item.size} - ${item.price}грн</p>`;
+      .map(function (item,i) {
+        goods += `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}грн</p>`;
         return goods;
       });
 

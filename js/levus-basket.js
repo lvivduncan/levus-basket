@@ -84,7 +84,10 @@
 		if (localStorage.getItem('basket') === null) {
 			sum.innerHTML = 0;
 		} else {
-			sum.innerHTML = JSON.parse(localStorage.getItem('basket')).map(item => item.price).reduce((sum, item) => sum + +item, 0);
+			sum.innerHTML =
+				JSON.parse(localStorage.getItem('basket'))
+					.map(item => item.price)
+					.reduce((sum, item) => sum + +item, 0);
 		}
 	}
 
@@ -108,9 +111,9 @@
 		if (localStorage.getItem('basket') === null) {
 			selected.innerHTML = '';
 		} else {
-			selected.innerHTML = 
+			selected.innerHTML =
 				JSON.parse(localStorage.getItem('basket'))
-				.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}грн</p>`, '');
+					.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}грн</p>`, '');
 		}
 	}
 
@@ -127,8 +130,12 @@
 			// remove item
 			data.splice(id, 1);
 
-			// return data to localStorage
-			localStorage.setItem('basket', JSON.stringify(data));
+			// claer storage or return data to localStorage
+			if (data.length === 0) {
+				localStorage.removeItem('basket');
+			} else {
+				localStorage.setItem('basket', JSON.stringify(data));
+			}
 
 			// reload
 			viewSum();
