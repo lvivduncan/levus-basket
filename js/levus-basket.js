@@ -108,13 +108,9 @@
 		if (localStorage.getItem('basket') === null) {
 			selected.innerHTML = '';
 		} else {
-			const data = JSON.parse(localStorage.getItem('basket'));
-
-			if (JSON.parse(localStorage.getItem('basket')).length === 1) {
-				selected.innerHTML = `<p><i></i> ${data[0].name} - ${data[0].size} - ${data[0].price}</p>`;
-			} else {
-				selected.innerHTML = data.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}грн</p>`, '');
-			}
+			selected.innerHTML = 
+				JSON.parse(localStorage.getItem('basket'))
+				.reduce((sum, item, i) => sum + `<p><i data-id="${i}"></i> ${item.name} - ${item.size} - ${item.price}грн</p>`, '');
 		}
 	}
 
